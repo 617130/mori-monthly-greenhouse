@@ -1,4 +1,4 @@
-# MORI · 月度温室
+# MORI · 一日温室
 
 一个独立的每日记录与轻量待办应用：每天对应一株植物，同月植物一起住进一座会呼吸的温室。
 
@@ -17,9 +17,10 @@ https://mori-monthly-greenhouse-2026.handy-pig-7411.chatgpt.site
 
 ## 本地运行
 
-直接打开 `index.html` 即可。项目使用原生 HTML、CSS 和 JavaScript，无需构建工具或外部依赖。
+进入 `projects/mori/` 后直接打开 `index.html` 即可。项目使用原生 HTML、CSS 和 JavaScript，无需构建工具或外部依赖。
 
 ## 目录
 
-- `index.html`：个人作品集首页
-- `projects/mori/`：MORI 月度温室应用
+- `projects/mori/index.html`：温室页面
+- `projects/mori/app.css`：视觉与动效
+- `projects/mori/app.js`：日程、成长、天气与动物交互
