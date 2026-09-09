@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="MORI 一日温室：每天种下一株植物，把一个月养成一座会下雨、会起风的小温室。" />
+  <meta name="theme-color" content="#f6f4ee" />
+  <title>MORI / 一日温室</title>
+  <link rel="stylesheet" href="./app.css" />
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <header class="app-header">
+    <div class="brand-wrap">
+      <a class="back-link" href="../../index.html">← 作品集</a>
+      <a class="brand" href="./index.html" aria-label="MORI 一日温室首页">
+        <span class="brand-mark" aria-hidden="true">m</span>
+        <span><strong>MORI</strong><small>一日温室</small></span>
+      </a>
+    </div>
+
+    <nav class="date-nav" aria-label="日期导航">
+      <button class="icon-button" id="prevDay" type="button" aria-label="前一天">←</button>
+      <div class="date-display" aria-live="polite">
+        <span id="dayLabel">今天</span>
+        <strong id="fullDate">—</strong>
+      </div>
+      <button class="icon-button" id="nextDay" type="button" aria-label="后一天">→</button>
+      <button class="today-button" id="todayButton" type="button">回到今天</button>
+    </nav>
+
+    <button class="reminder-toggle" id="reminderButton" type="button" aria-pressed="false">
+      <span class="bell" aria-hidden="true">♧</span>
+      <span id="reminderButtonText">开启提醒</span>
+    </button>
+  </header>
+
+  <main id="main" class="app-shell">
+    <section class="intro-section" aria-labelledby="pageTitle">
+      <div class="intro-copy">
+        <p class="overline">MORI DAILY / <span id="dayOfYear">—</span></p>
+        <h1 id="pageTitle">今天，慢慢长出来。</h1>
+        <p class="greeting" id="greeting">给今天留一小块可以呼吸的地方。</p>
+      </div>
+
+      <div class="summary-grid" aria-label="今日摘要">
+        <article class="summary-card progress-card">
+          <div class="summary-card-top">
+            <span>今日照料</span>
+            <span class="summary-icon" aria-hidden="true">✦</span>
+          </div>
+          <div class="progress-content">
+            <div class="progress-ring" id="progressRing" role="img" aria-label="今日完成进度 0%">
+              <span id="progressPercent">0%</span>
+            </div>
+            <div>
+              <strong id="progressCount">0 / 0</strong>
+              <p id="progressCopy">先种下一件小事。</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="summary-card energy-card">
+          <div class="summary-card-top">
+            <span>今日能量</span>
+            <span class="summary-icon" id="energyPlant" aria-hidden="true">·</span>
+          </div>
+          <strong id="energyLabel">还没有记录</strong>
+          <p>晚一点再回来，给今天做个标记。</p>
+          <button class="text-button" id="openReflectionTop" type="button">记录心情 →</button>
+        </article>
+      </div>
+
+      <div class="seed-prompt" id="seedPrompt" hidden>
+        <span class="seed-icon" aria-hidden="true">✳</span>
+        <p><strong>今日种子</strong><span id="seedText">—</span></p>
+        <button class="text-button" id="useSeedButton" type="button">写下来</button>
+      </div>
+    </section>
+
+    <section class="panel greenhouse-panel" aria-labelledby="greenhouseTitle">
+      <div class="greenhouse-heading">
+        <div>
+          <p class="section-label">温室 / MONTHLY GARDEN</p>
+          <h2 id="greenhouseTitle">这个月，每一天都有一株植物。</h2>
+          <p class="greenhouse-subtitle" id="greenhouseCount">本月 1 株正在生长</p>
+          <p class="greenhouse-growth-hint">0 级种子 → 发芽 → 幼苗 → 长叶 → 花苞 → 完全体 · 每完成一件日程长一格</p>
+        </div>
+        <div class="weather-control">
+          <span class="weather-status" id="weatherStatus" aria-live="polite">自动天气 · 晴朗</span>
+          <button class="secondary-button" id="weatherButton" type="button">换一种天气</button>
+        </div>
+      </div>
+
+      <nav class="month-nav" aria-label="温室月份导航">
+        <button class="icon-button" id="prevMonth" type="button" aria-label="上一个月">←</button>
+        <strong id="monthLabel" aria-live="polite">—</strong>
+        <button class="icon-button" id="nextMonth" type="button" aria-label="下一个月">→</button>
+        <button class="today-button" id="currentMonthButton" type="button">回到本月</button>
+      </nav>
+
+      <div class="greenhouse-scene weather-sunny" id="greenhouseScene" aria-label="会随天气变化的温室">
+        <div class="greenhouse-backdrop" aria-hidden="true">
+          <span class="roof-arch"></span>
+          <span class="pane-vertical pane-left"></span>
+          <span class="pane-vertical pane-right"></span>
+          <span class="pane-cross"></span>
+          <span class="back-shelf shelf-left"><i></i><i></i></span>
+          <span class="back-shelf shelf-right"><i></i><i></i></span>
+          <span class="hanging-vine vine-left"></span>
+          <span class="hanging-vine vine-right"></span>
+          <span class="lamp-glow"></span>
+        </div>
+        <div class="sky-glow" aria-hidden="true"></div>
+        <div class="weather-particles" id="weatherParticles" aria-hidden="true"></div>
+        <div class="monthly-plants" id="monthlyPlants" aria-label="本月每天的植物"></div>
+        <div class="plant-display" id="currentPlant" role="img" aria-label="今天的植物"></div>
+        <div class="animal-layer" id="animalLayer" aria-hidden="true"></div>
+        <div class="greenhouse-ground" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="glass-reflection" aria-hidden="true"></div>
+      </div>
+
+      <div class="greenhouse-caption">
+        <div>
+          <strong id="currentPlantName">今天的植物</strong>
+          <span id="currentPlantStage" aria-live="polite">种子 · 0 / 5 · 还在土里打盹</span>
+          <div class="growth-meter" id="growthMeter" aria-label="成长进度 0 / 5">
+            <span class="growth-dot" aria-hidden="true"></span><span class="growth-dot" aria-hidden="true"></span><span class="growth-dot" aria-hidden="true"></span><span class="growth-dot" aria-hidden="true"></span><span class="growth-dot" aria-hidden="true"></span>
+            <small id="growthMeterLabel">0 / 5</small>
+          </div>
+          <span class="interaction-status" id="interactionStatus" aria-live="polite">温室里还没有小动物来访。</span>
+        </div>
+        <div class="greenhouse-actions">
+          <button class="text-button" id="animalButton" type="button">召唤小动物 →</button>
+          <button class="text-button" id="changePlantButton" type="button">换一株 →</button>
+        </div>
+      </div>
+
+      <div class="collection-heading"><span>本月成长档案</span><span>每一天都会留下一个位置</span></div>
+      <div class="plant-collection" id="plantCollection" aria-label="按天累积的植物"></div>
+    </section>
+
+    <div class="workspace-grid">
+      <div class="timeline-column">
+        <section class="panel composer-panel" aria-labelledby="composerTitle">
+          <div class="panel-heading">
+            <div>
+              <p class="section-label">01 / 留下一个信号</p>
+              <h2 id="composerTitle">种下一件事</h2>
+            </div>
+            <span class="keyboard-hint">Enter ↵</span>
+          </div>
+
+          <form id="taskForm" class="task-form">
+            <label class="sr-only" for="taskInput">要记录的事情</label>
+            <div class="compose-row">
+              <input id="taskInput" name="task" type="text" maxlength="120" autocomplete="off" placeholder="此刻想留下什么？" required />
+              <button class="primary-button" type="submit"><span aria-hidden="true">＋</span> 添加</button>
+            </div>
+            <div class="compose-options">
+              <label class="select-field">
+                <span>时间</span>
+                <input id="taskTime" name="time" type="time" />
+              </label>
+              <label class="select-field">
+                <span>提醒</span>
+                <select id="taskReminder" name="reminder">
+                  <option value="none">不提醒</option>
+                  <option value="ontime">准时</option>
+                  <option value="15">提前 15 分钟</option>
+                </select>
+              </label>
+              <label class="select-field">
+                <span>今日植物</span>
+                <select id="plantSpecies" name="plantSpecies">
+                  <option value="auto">自动选择</option>
+                  <option value="fern">蕨类</option>
+                  <option value="monstera">龟背竹</option>
+                  <option value="lavender">薰衣草</option>
+                  <option value="cactus">仙人掌</option>
+                  <option value="clover">四叶草</option>
+                  <option value="sunflower">向日葵</option>
+                </select>
+              </label>
+            </div>
+            <p class="form-hint">不填时间也可以，它会被放进“随手记”；当天完成 5 件日程，植物就会长成完全体。</p>
+          </form>
+        </section>
+
+        <section class="panel timeline-panel" aria-labelledby="timelineTitle">
+          <div class="panel-heading timeline-heading">
+            <div>
+              <p class="section-label">02 / 看见今天</p>
+              <h2 id="timelineTitle">时间流</h2>
+            </div>
+            <span class="task-count" id="taskCount">0 件事</span>
+          </div>
+
+          <div class="timeline" id="timeline">
+            <section class="time-group" data-period="morning" aria-labelledby="morningTitle">
+              <div class="group-heading">
+                <h3 id="morningTitle"><span class="period-dot morning-dot" aria-hidden="true"></span>晨光</h3>
+                <span>06—12</span>
+              </div>
+              <ol class="task-list" id="morningTasks"></ol>
+              <p class="group-empty" id="morningEmpty">还没有种子，留一点空白也很好。</p>
+            </section>
+
+            <section class="time-group" data-period="day" aria-labelledby="dayTitle">
+              <div class="group-heading">
+                <h3 id="dayTitle"><span class="period-dot day-dot" aria-hidden="true"></span>日光</h3>
+                <span>12—18</span>
+              </div>
+              <ol class="task-list" id="dayTasks"></ol>
+              <p class="group-empty" id="dayEmpty">还没有种子，留一点空白也很好。</p>
+            </section>
+
+            <section class="time-group" data-period="night" aria-labelledby="nightTitle">
+              <div class="group-heading">
+                <h3 id="nightTitle"><span class="period-dot night-dot" aria-hidden="true"></span>月光</h3>
+                <span>18—24</span>
+              </div>
+              <ol class="task-list" id="nightTasks"></ol>
+              <p class="group-empty" id="nightEmpty">还没有种子，留一点空白也很好。</p>
+            </section>
+
+            <section class="time-group loose-group" data-period="loose" aria-labelledby="looseTitle">
+              <div class="group-heading">
+                <h3 id="looseTitle"><span class="period-dot loose-dot" aria-hidden="true"></span>随手记</h3>
+                <span>没有固定时间</span>
+              </div>
+              <ol class="task-list" id="looseTasks"></ol>
+              <p class="group-empty" id="looseEmpty">想到什么，就先放在这里。</p>
+            </section>
+          </div>
+
+          <div class="timeline-empty" id="timelineEmpty" hidden>
+            <div class="empty-seed" aria-hidden="true">✽</div>
+            <strong>今天还没有信号</strong>
+            <p>从上面的输入框种下一件小事，今天就有了第一片叶子。</p>
+          </div>
+        </section>
+      </div>
+
+      <aside class="side-column" aria-label="今日工具">
+        <section class="panel care-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-label">03 / 温柔处理</p>
+              <h2>给今天留余地</h2>
+            </div>
+          </div>
+          <p class="care-copy">完成不是唯一的答案。把还没发生的事，轻轻放到明天。</p>
+          <button class="secondary-button" id="moveOverdueButton" type="button">查看逾期事项</button>
+          <p class="overdue-note" id="overdueNote" hidden></p>
+        </section>
+
+        <section class="panel reflection-panel" aria-labelledby="reflectionTitle">
+          <div class="panel-heading">
+            <div>
+              <p class="section-label">04 / 收集今天</p>
+              <h2 id="reflectionTitle">退潮记录</h2>
+            </div>
+            <span class="reflection-mark" aria-hidden="true">◌</span>
+          </div>
+          <div id="reflectionEmpty" class="reflection-empty">
+            <p>一天结束时，留下一句话就够了。</p>
+          </div>
+          <div id="reflectionSummary" class="reflection-summary" hidden>
+            <span class="mood-badge" id="summaryMood">·</span>
+            <p id="summaryHighlight">—</p>
+            <small id="summaryEnergy">能量 — / 5</small>
+          </div>
+          <button class="secondary-button full-button" id="openReflectionButton" type="button">写下今天 →</button>
+        </section>
+
+        <details class="panel tools-panel">
+          <summary><span>本地数据</span><span aria-hidden="true">＋</span></summary>
+          <div class="tools-content">
+            <p>记录只保存在这台设备的浏览器里，不需要注册。</p>
+            <div class="tool-actions">
+              <button class="text-button" id="exportButton" type="button">导出 JSON</button>
+              <button class="text-button" id="importButton" type="button">导入 JSON</button>
+              <input id="importInput" type="file" accept="application/json" hidden />
+            </div>
+            <button class="danger-button" id="clearDayButton" type="button">清空今天</button>
+          </div>
+        </details>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <span>MORI / local-first daily garden</span>
+    <span>页面打开时提供提醒 · <a href="../../index.html">回到作品集 ↗</a></span>
+  </footer>
+
+  <dialog class="modal" id="editDialog" aria-labelledby="editDialogTitle">
+    <form id="editForm" class="modal-form">
+      <div class="modal-heading">
+        <div>
+          <p class="section-label">编辑种子</p>
+          <h2 id="editDialogTitle">调整这件事</h2>
+        </div>
+        <button class="close-button" id="closeEditButton" type="button" aria-label="关闭编辑">×</button>
+      </div>
+      <input id="editId" type="hidden" />
+      <label class="field-label" for="editText">内容</label>
+      <input class="full-input" id="editText" type="text" maxlength="120" required />
+      <div class="modal-fields">
+        <label class="select-field"><span>时间</span><input id="editTime" type="time" /></label>
+        <label class="select-field"><span>提醒</span><select id="editReminder"><option value="none">不提醒</option><option value="ontime">准时</option><option value="15">提前 15 分钟</option></select></label>
+      </div>
+      <div class="modal-actions">
+        <button class="danger-button" id="deleteTaskButton" type="button">删除</button>
+        <div><button class="secondary-button" id="cancelEditButton" type="button">取消</button><button class="primary-button" type="submit">保存</button></div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="reflectionDialog" aria-labelledby="reflectionDialogTitle">
+    <form id="reflectionForm" class="modal-form">
+      <div class="modal-heading">
+        <div>
+          <p class="section-label">收集今天</p>
+          <h2 id="reflectionDialogTitle">今天是什么天气？</h2>
+        </div>
+        <button class="close-button" id="closeReflectionButton" type="button" aria-label="关闭记录">×</button>
+      </div>
+      <fieldset class="mood-fieldset">
+        <legend>选一个最接近的心情</legend>
+        <div class="mood-options" id="moodOptions">
+          <button type="button" class="mood-option" data-mood="bright" aria-label="晴朗" aria-pressed="false">☀<span>晴朗</span></button>
+          <button type="button" class="mood-option" data-mood="soft" aria-label="柔和" aria-pressed="false">◒<span>柔和</span></button>
+          <button type="button" class="mood-option" data-mood="cloudy" aria-label="多云" aria-pressed="false">☁<span>多云</span></button>
+          <button type="button" class="mood-option" data-mood="rainy" aria-label="下雨" aria-pressed="false">⌁<span>下雨</span></button>
+          <button type="button" class="mood-option" data-mood="starry" aria-label="星夜" aria-pressed="false">✦<span>星夜</span></button>
+        </div>
+      </fieldset>
+      <label class="range-label" for="energyRange"><span>能量</span><output id="energyOutput" for="energyRange">3 / 5</output></label>
+      <input id="energyRange" type="range" min="1" max="5" value="3" />
+      <label class="field-label" for="highlightInput">今天最想留下的一句话</label>
+      <textarea class="highlight-input" id="highlightInput" maxlength="240" rows="4" placeholder="哪一个瞬间值得被记住？"></textarea>
+      <div class="modal-actions"><span></span><div><button class="secondary-button" id="cancelReflectionButton" type="button">稍后</button><button class="primary-button" type="submit">保存今天</button></div></div>
+    </form>
+  </dialog>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>
+
